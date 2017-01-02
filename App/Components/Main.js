@@ -2,6 +2,7 @@
  * Home JS file
  */
 import React, {Component} from 'react';
+import Quiz from './Quiz';
 var SvgElement = require('./SvgElement');
 var svg_question = require('../SVG/question.js');
 var api = require('../Utils/api');
@@ -10,14 +11,31 @@ import {
     Text,
     View,
     Dimensions,
+    TouchableHighlight,
 } from 'react-native';
 
 class Main extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    startQuiz() {
+        console.log('lets start the quiz');
+        this.props.navigator.push({
+            component: Quiz,
+            title: 'Quiz',
+            // passProps: {
+            //     // city: this.state.city,
+            //     // results: res.result.listings
+            // },
+            navigationBarHidden: false
+        });
+    }
+
     render() {
 
         const {width, height} = Dimensions.get('window');
-        console.log(width);
-        console.log(height);
         const num_horizontal = 4;
         const num_vertical = 7;
         const total_grid_items = ( num_horizontal * num_vertical );
@@ -42,9 +60,10 @@ class Main extends Component {
             <View style={styles.homeWrap}>
                 <View style={[styles.homeTextWrap, {width: width, height: height}]}>
                     <Text style={styles.homeText}>QUIZIAN</Text>
-                    <View style={styles.buttonWrap}>
+                    <TouchableHighlight style={styles.buttonWrap} onPress={this.startQuiz}
+                                        underlayColor="rgba(255,255,255,0.9)">
                         <Text style={styles.button}>START</Text>
-                    </View>
+                    </TouchableHighlight>
                 </View>
                 {grid}
             </View>
