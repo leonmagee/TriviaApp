@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import Quiz from './Quiz';
 var SvgElement = require('./SvgElement');
 var svg_question = require('../SVG/question.js');
-var api = require('../Utils/api');
+
 import {
     StyleSheet,
     Text,
@@ -18,6 +18,11 @@ class Main extends Component {
 
     constructor(props) {
         super(props);
+
+        // this.state = {
+        //     isLoading: false,
+        //     error: false,
+        // }
     }
 
     startQuiz() {
@@ -60,7 +65,7 @@ class Main extends Component {
             <View style={styles.homeWrap}>
                 <View style={[styles.homeTextWrap, {width: width, height: height}]}>
                     <Text style={styles.homeText}>QUIZIAN</Text>
-                    <TouchableHighlight style={styles.buttonWrap} onPress={this.startQuiz}
+                    <TouchableHighlight style={styles.buttonWrap} onPress={() => this.startQuiz()}
                                         underlayColor="rgba(255,255,255,0.9)">
                         <Text style={styles.button}>START</Text>
                     </TouchableHighlight>

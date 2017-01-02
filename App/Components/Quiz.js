@@ -12,8 +12,15 @@ import {
 class Main extends Component {
     render() {
 
+        api.getQuestions().then((res) =>
+        {
+          console.log(res);
+        });
+
+
+
         return (
-            <View>
+            <View style={styles.quizWrap}>
                 <Text>quiz has started</Text>
             </View>
         )
@@ -23,9 +30,8 @@ class Main extends Component {
 const styles = StyleSheet.create({
     quizWrap: {
         flex: 1,
-        padding: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: 'rgba(32,178,170,0.85)',
     },
 });
