@@ -3,8 +3,8 @@
  */
 import React, {Component} from 'react';
 import Quiz from './Quiz';
-var SvgElement = require('./SvgElement');
-var svg_question = require('../SVG/question.js');
+import SvgElement from './SvgElement';
+import svg_question from '../SVG/question';
 
 import {
     StyleSheet,
