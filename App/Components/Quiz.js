@@ -11,6 +11,7 @@ import {
     View,
     ActivityIndicator,
     WebView,
+    TouchableHighlight,
 } from 'react-native';
 
 class Main extends Component {
@@ -23,6 +24,12 @@ class Main extends Component {
             error: false,
             questions: false,
             current: 0,
+            buttonColor: [
+                {bg: '#FCFCFC', text: '#111'},
+                {bg: '#FCFCFC', text: '#111'},
+                {bg: '#FCFCFC', text: '#111'},
+                {bg: '#FCFCFC', text: '#111'},
+            ]
         }
 
 
@@ -74,6 +81,29 @@ class Main extends Component {
         });
     }
 
+    chooseAnswer(key, correct) {
+        console.log('answer chosen: ' + key + ' : ' + correct);
+
+        const new_array = this.state.buttonColor;
+
+        if ( correct === 'true' ) {
+            new_array[key].bg = '#3cb371';
+            new_array[key].text = '#FAFAFA';
+
+        } else if ( correct === 'false' ) {
+
+            new_array[key].bg = '#ff4500';
+            new_array[key].text = '#FAFAFA';
+        }
+        else {
+            // throw error?
+        }
+
+        this.setState({
+            buttonColor: new_array,
+        });
+    }
+
     render() {
 
         if (this.state.questions) {
@@ -82,7 +112,6 @@ class Main extends Component {
              * Decode HTML Entities
              */
             const entities = new Entities();
-
 
             const current_question = this.state.questions[this.state.current];
             const answers = current_question.answers.map((item, key) => {
@@ -94,16 +123,18 @@ class Main extends Component {
 
                     const answer_now = entities.decode(item.answer);
                     return (
-                        <View style={styles.answerWrap} key={key}>
-                            <Text style={styles.answerText}>{answer_now} - {correct_name}</Text>
-                        </View>
+                        <TouchableHighlight
+                            key={key}
+                            style={[styles.button, {backgroundColor: this.state.buttonColor[key].bg}]}
+                            underlayColor="#FFF"
+                            onPress={() => this.chooseAnswer(key, correct_name)}>
+                            <Text style={[styles.buttonText,{color: this.state.buttonColor[key].text}]}>{answer_now} - {correct_name}</Text>
+                        </TouchableHighlight>
                     );
                 }
             );
 
-
             const question_now = entities.decode(current_question.question);
-
 
             var questions = (
                 <View>
@@ -113,7 +144,6 @@ class Main extends Component {
                     {answers}
                 </View>
             )
-
         } else {
             var questions = (
                 <View></View>
@@ -138,9 +168,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: 'rgba(32,178,170,0.20)',
+        paddingHorizontal: 15,
     },
     questionWrap: {
-        backgroundColor: 'rgba(255,255,255,0.9)',
+        //backgroundColor: 'rgba(255,255,255,0.9)',
+        backgroundColor: '#FCFCFC',
         marginTop: 100,
         marginBottom: 15,
         paddingVertical: 10,
@@ -155,8 +187,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
     },
-    answerWrap: {
-        backgroundColor: 'rgba(255,255,255,0.9)',
+    button: {
         marginTop: 10,
         marginBottom: 10,
         paddingVertical: 10,
@@ -166,8 +197,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowOffset: {width: 1, height: 1},
     },
-    answerText: {
-        color: '#111',
+    buttonText: {
+        //color: '#111',
         fontWeight: 'bold',
         fontSize: 16,
     },

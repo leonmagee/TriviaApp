@@ -29,7 +29,7 @@ class Main extends Component {
         console.log('lets start the quiz');
         this.props.navigator.push({
             component: Quiz,
-            title: 'Quiz',
+            title: 'Quizian',
             // passProps: {
             //     // city: this.state.city,
             //     // results: res.result.listings
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
         //backgroundColor: 'blue',
     },
     gridItem: {
-        backgroundColor: 'lightseagreen',
+        backgroundColor: 'lightseagreen', //#20b2aa
         justifyContent: 'center',
         alignItems: 'center',
         margin: 1,
