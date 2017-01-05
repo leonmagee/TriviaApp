@@ -12,69 +12,9 @@ import {
     View,
     Dimensions,
     TouchableHighlight,
+    Animated,
 } from 'react-native';
 
-class Main extends Component {
-
-    constructor(props) {
-        super(props);
-
-        // this.state = {
-        //     isLoading: false,
-        //     error: false,
-        // }
-    }
-
-    startQuiz() {
-        console.log('lets start the quiz');
-        this.props.navigator.push({
-            component: Quiz,
-            title: 'Quizian',
-            // passProps: {
-            //     // city: this.state.city,
-            //     // results: res.result.listings
-            // },
-            navigationBarHidden: false
-        });
-    }
-
-    render() {
-
-        const {width, height} = Dimensions.get('window');
-        const num_horizontal = 4;
-        const num_vertical = 7;
-        const total_grid_items = ( num_horizontal * num_vertical );
-        const grid_array = [];
-        for (i = 0; i < total_grid_items; i++) {
-            grid_array.push(i);
-        }
-        const item_width = ( ( ( width - 2 ) / num_horizontal ) - 2);
-        const item_height = ( ( ( height - 2 ) / num_vertical ) - 2 );
-
-        const grid = grid_array.map((item, key) => {
-            return (
-                <View style={[styles.gridItem, {width: item_width, height: item_height}]} key={key}>
-                    <View style={styles.svgWrap}>
-                        <SvgElement fill="rgba(0,0,0,0.1)" svg_data={svg_question}/>
-                    </View>
-                </View>
-            )
-        })
-
-        return (
-            <View style={styles.homeWrap}>
-                <View style={[styles.homeTextWrap, {width: width, height: height}]}>
-                    <Text style={styles.homeText}>QUIZIAN</Text>
-                    <TouchableHighlight style={styles.buttonWrap} onPress={() => this.startQuiz()}
-                                        underlayColor="rgba(255,255,255,0.9)">
-                        <Text style={styles.button}>START</Text>
-                    </TouchableHighlight>
-                </View>
-                {grid}
-            </View>
-        )
-    }
-}
 
 const styles = StyleSheet.create({
     homeWrap: {
@@ -120,5 +60,103 @@ const styles = StyleSheet.create({
         margin: 1,
     }
 });
+
+
+const {width, height} = Dimensions.get('window');
+const num_horizontal = 6;
+const num_vertical = 10;
+const total_grid_items = ( num_horizontal * num_vertical );
+const grid_array = [];
+for (i = 0; i < total_grid_items; i++) {
+    grid_array.push(i);
+}
+
+/**
+ * @todo change this to only use grid array?
+ * @type {Array}
+ */
+const num_boxes = grid_array;
+const item_width = ( ( ( width - 2 ) / num_horizontal ) - 2);
+const item_height = ( ( ( height - 2 ) / num_vertical ) - 2 );
+
+
+
+
+
+
+
+
+
+class Main extends Component {
+
+    constructor(props) {
+        super(props);
+
+        // this.state = {
+        //     isLoading: false,
+        //     error: false,
+        // }
+    }
+
+    startQuiz() {
+        console.log('lets start the quiz');
+        this.props.navigator.push({
+            component: Quiz,
+            title: 'Quizian',
+            // passProps: {
+            //     // city: this.state.city,
+            //     // results: res.result.listings
+            // },
+            navigationBarHidden: false
+        });
+    }
+
+
+    componentWillMount() {
+        this.animatedValue = [];
+        num_boxes.forEach((item) => {
+
+            this.animatedValue[item] = new Animated.Value(0);
+        })
+    }
+
+    componentDidMount() {
+        const animated_timing = num_boxes.map((a) => {
+            Animated.timing(this.animatedValue[a], {
+                toValue: 9,
+                duration: 10000,
+            }).start()
+        });
+        Animated.stagger(5000, animated_timing);
+    }
+
+
+    render() {
+
+
+        const grid = grid_array.map((item, key) => {
+            return (
+                <View style={[styles.gridItem, {width: item_width, height: item_height}]} key={key}>
+                    <View style={styles.svgWrap}>
+                        <SvgElement fill="rgba(0,0,0,0.1)" svg_data={svg_question}/>
+                    </View>
+                </View>
+            )
+        })
+
+        return (
+            <View style={styles.homeWrap}>
+                <View style={[styles.homeTextWrap, {width: width, height: height}]}>
+                    <Text style={styles.homeText}>QUIZIAN</Text>
+                    <TouchableHighlight style={styles.buttonWrap} onPress={() => this.startQuiz()}
+                                        underlayColor="rgba(255,255,255,0.9)">
+                        <Text style={styles.button}>START</Text>
+                    </TouchableHighlight>
+                </View>
+                {grid}
+            </View>
+        )
+    }
+}
 
 module.exports = Main;

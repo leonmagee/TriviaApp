@@ -25,13 +25,13 @@ class Main extends Component {
             questions: false,
             current: 0,
             buttonColor: [
-                {bg: '#FCFCFC', text: '#111'},
-                {bg: '#FCFCFC', text: '#111'},
-                {bg: '#FCFCFC', text: '#111'},
-                {bg: '#FCFCFC', text: '#111'},
-            ]
+                {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+                {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+                {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+                {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+            ],
+            disabled: false,
         }
-
 
         const questions = [];
 
@@ -86,14 +86,16 @@ class Main extends Component {
 
         const new_array = this.state.buttonColor;
 
-        if ( correct === 'true' ) {
+        if (correct === 'true') {
             new_array[key].bg = '#3cb371';
             new_array[key].text = '#FAFAFA';
+            new_array[key].shadow = 'rgba(0,0,0,0.2)';
 
-        } else if ( correct === 'false' ) {
+        } else if (correct === 'false') {
 
             new_array[key].bg = '#ff4500';
             new_array[key].text = '#FAFAFA';
+            new_array[key].shadow = 'rgba(0,0,0,0.2)';
         }
         else {
             // throw error?
@@ -101,6 +103,7 @@ class Main extends Component {
 
         this.setState({
             buttonColor: new_array,
+            disabled: true,
         });
     }
 
@@ -127,8 +130,11 @@ class Main extends Component {
                             key={key}
                             style={[styles.button, {backgroundColor: this.state.buttonColor[key].bg}]}
                             underlayColor="#FFF"
+                            activeOpacity={1}
+                            disabled={this.state.disabled}
                             onPress={() => this.chooseAnswer(key, correct_name)}>
-                            <Text style={[styles.buttonText,{color: this.state.buttonColor[key].text}]}>{answer_now} - {correct_name}</Text>
+                            <Text style={[styles.buttonText,{color: this.state.buttonColor[key].text, textShadowColor: this.state.buttonColor[key].shadow}]}>{answer_now}
+                                - {correct_name}</Text>
                         </TouchableHighlight>
                     );
                 }
@@ -201,6 +207,8 @@ const styles = StyleSheet.create({
         //color: '#111',
         fontWeight: 'bold',
         fontSize: 16,
+        textShadowOffset: {width: 1, height: 1},
+
     },
 });
 

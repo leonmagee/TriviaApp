@@ -3,6 +3,7 @@
  */
 import React, {Component} from 'react';
 import Main from './App/Components/Main';
+//import Main from './App/Components/StaggerTest';
 import {
     AppRegistry,
     StyleSheet,

@@ -18,8 +18,8 @@ import Svg, {
 } from 'react-native-svg';
 
 const defaultProps = {
-    svg_size: 100,
-    svg_scale: 0.7,
+    svg_size: 50,
+    svg_scale: 0.4,
     fill: '#222',
 };
 
@@ -38,7 +38,7 @@ class SvgElement extends Component {
     render() {
         var svg_paths = this.state.svg_data.map((item, index) => {
             return (
-                <Path key={index} x="14" y="15" fill={this.state.svg_fill} scale={this.state.svg_scale} height="100" width="100" d={item} />
+                <Path key={index} x="7" y="8" fill={this.state.svg_fill} scale={this.state.svg_scale} height="100" width="100" d={item} />
             )
         });
         return (
