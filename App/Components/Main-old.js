@@ -51,6 +51,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 30,
     },
+    svgWrap: {
+        //backgroundColor: 'blue',
+    },
     gridItem: {
         backgroundColor: '#20b2aa', // 'lightseagreen', //#20b2aa
         justifyContent: 'center',
@@ -73,13 +76,27 @@ for (i = 0; i < total_grid_items; i++) {
  * @todo change this to only use grid array?
  * @type {Array}
  */
+//const grid_array = grid_array;
 const item_width = ( ( ( width - 2 ) / num_horizontal ) - 2);
 const item_height = ( ( ( height - 2 ) / num_vertical ) - 2 );
+
+
+
+
+
+
+
+
 
 class Main extends Component {
 
     constructor(props) {
         super(props);
+
+        // this.state = {
+        //     isLoading: false,
+        //     error: false,
+        // }
     }
 
     startQuiz() {
@@ -87,9 +104,14 @@ class Main extends Component {
         this.props.navigator.push({
             component: Quiz,
             title: 'Quizian',
+            // passProps: {
+            //     // city: this.state.city,
+            //     // results: res.result.listings
+            // },
             navigationBarHidden: false
         });
     }
+
 
     componentWillMount() {
         this.animatedValue = [];
@@ -109,15 +131,14 @@ class Main extends Component {
         Animated.stagger(5000, animated_timing);
     }
 
+
     render() {
 
         const grid = grid_array.map((item, key) => {
 
                 const interpolateColor = this.animatedValue[item].interpolate({
                     inputRange: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                    //inputRange: [0, 1],
                     outputRange: ['#20b2aa', '#089CCA', '#07CA88', '#10CAC0', '#5CCA9D', '#089CCA', '#07CA88', '#10CAC0', '#5CCA9D', '#20b2aa'],
-                    //outputRange: ['#fff', '#000'],
                     // white / blue / green / aqua / light green
                 })
                 const animatedStyle = {

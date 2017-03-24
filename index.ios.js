@@ -2,7 +2,8 @@
  * IOS Index file - this code can be shared between index.ios and index.android
  */
 import React, {Component} from 'react';
-import Main from './App/Components/Main';
+//import Main from './App/Components/Main';
+import Main from './App/Components/Quiz';
 //import Main from './App/Components/StaggerTest';
 import {
     AppRegistry,
@@ -21,7 +22,7 @@ export default class TriviaApp extends Component {
                     component: Main,
                     title: 'Home',
                 }}
-                navigationBarHidden={true}
+                navigationBarHidden={false}
             />
         )
     }
