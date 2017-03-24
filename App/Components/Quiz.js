@@ -4,6 +4,7 @@
 import React, {Component} from 'react';
 var api = require('../Utils/api');
 var Entities = require('html-entities').XmlEntities;
+import Correct from './Correct';
 
 import {
     StyleSheet,
@@ -31,6 +32,8 @@ class Main extends Component {
                 {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
             ],
             disabled: false,
+            correctAnswer: false,
+            falseAnswer: false,
         }
 
         const questions = [];
@@ -90,12 +93,14 @@ class Main extends Component {
             new_array[key].bg = '#3cb371';
             new_array[key].text = '#FAFAFA';
             new_array[key].shadow = 'rgba(0,0,0,0.2)';
+            this.setState({correctAnswer: true});
 
         } else if (correct === 'false') {
 
             new_array[key].bg = '#ff4500';
             new_array[key].text = '#FAFAFA';
             new_array[key].shadow = 'rgba(0,0,0,0.2)';
+            this.setState({falseAnswer: true});
         }
         else {
             // throw error?
@@ -113,6 +118,8 @@ class Main extends Component {
 
             /**
              * Decode HTML Entities
+             * @todo this isn't always working?
+             * Maybe find a better api?
              */
             const entities = new Entities();
 
@@ -158,6 +165,7 @@ class Main extends Component {
 
         return (
             <View style={styles.quizWrap}>
+                <Correct />
                 {questions}
                 <ActivityIndicator
                     animating={this.state.isLoading}
