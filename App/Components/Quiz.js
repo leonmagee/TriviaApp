@@ -4,6 +4,7 @@ var Entities = require('html-entities').XmlEntities;
 import CorrectAnswer from './CorrectAnswer';
 import FalseAnswer from './FalseAnswer';
 import NextQuestion from './NextQuestion';
+import variables from '../Styles/Variables';
 
 import {
     StyleSheet,
@@ -13,6 +14,56 @@ import {
     WebView,
     TouchableHighlight,
 } from 'react-native';
+
+const styles = StyleSheet.create({
+    quizWrap: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: 'rgba(32,178,170,0.10)',
+        paddingTop: 100,
+        paddingHorizontal: 15,
+    },
+    questionWrap: {
+        backgroundColor: '#FCFCFC',
+        marginTop: 15,
+        marginBottom: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: {width: 1, height: 1},
+    },
+    questionText: {
+        color: '#111',
+        fontWeight: 'bold',
+        fontSize: 18,
+    },
+    button: {
+        marginTop: 10,
+        marginBottom: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: {width: 1, height: 1},
+    },
+    buttonText: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        textShadowOffset: {width: 1, height: 1},
+
+    },
+});
+
+let defaultButtonColors = [
+    {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+    {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+    {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+    {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+];
 
 class Quiz extends Component {
 
@@ -24,14 +75,12 @@ class Quiz extends Component {
             error: false,
             questions: false,
             current: 0,
-            buttonColor: [
-                {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-                {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-                {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-                {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-            ],
+            buttonColor: defaultButtonColors,
             disabled: false,
             answerResult: false,
+            correctAnswers: 0,
+            falseAnswers: 0,
+            correctAnswerKey: false,
         }
 
         api.getQuestions().then((res) => {
@@ -43,6 +92,7 @@ class Quiz extends Component {
 
             /**
              * for multiple choice questions
+             * @todo adapter class to be extended for different APIs?
              */
             // results: Array[10]
             // Object
@@ -75,13 +125,16 @@ class Quiz extends Component {
                 trivia_question.incorrect_answers.map((incorrect_answer) => {
                     answers.push({answer: incorrect_answer, correct: false});
                 })
+                /**
+                 * @todo I need to get the key of the correct answer ewre, not inside the render method..
+                 */
                 questions.push({
                     question: trivia_question.question,
                     answers: shuffleArray(answers),
                 })
             });
 
-            console.log(questions);
+            //console.log(questions);
 
             this.setState({questions: questions});
 
@@ -91,27 +144,52 @@ class Quiz extends Component {
     }
 
     newQuestion(e) {
-        //console.log( 'e is this: ' + e );
-        this.setState({current: e});
+        let defaultButtonColorsNew = [
+            {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+            {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+            {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+            {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+        ];
+        this.setState({
+                current: e,
+                disabled: false,
+                answerResult: false,
+                buttonColor: defaultButtonColorsNew,
+            }
+        );
     }
 
+    /**
+     * Change background color of selected question
+     * Also make the correct question green to indicate what the right answer was if you got it wrong...
+     * @param key
+     * @param correct
+     */
     chooseAnswer(key, correct) {
         console.log('answer chosen: ' + key + ' : ' + correct);
 
         const new_array = this.state.buttonColor;
 
         if (correct === 'true') {
-            new_array[key].bg = '#3cb371';
+            //new_array[key].bg = '#3cb371';
+            new_array[key].bg = variables.brandSecond;
             new_array[key].text = '#FAFAFA';
             new_array[key].shadow = 'rgba(0,0,0,0.2)';
             this.setState({answerResult: 'true-answer'});
 
         } else if (correct === 'false') {
 
-            new_array[key].bg = '#ff4500';
+            //new_array[key].bg = '#ff4500';
+            new_array[key].bg = variables.brandPrimary;
             new_array[key].text = '#FAFAFA';
             new_array[key].shadow = 'rgba(0,0,0,0.2)';
             this.setState({answerResult: 'false-answer'});
+
+            /**
+             * Here I need to loop change the color of the correct answer to green.
+             * @todo I can just create a state that reflects the key of the correct answers, and then
+             * get that state here to update the color of the correct answer?
+             */
         }
         else {
             // throw error?
@@ -189,60 +267,17 @@ class Quiz extends Component {
 
         return (
             <View style={styles.quizWrap}>
-                <NextQuestion currentQuestion={this.state.current} newQuestion={(e) => this.newQuestion(e)}/>
+                <Text>Question {this.state.current + 1} of 10</Text>
                 {AnswerResult}
                 {questions}
                 <ActivityIndicator
                     animating={this.state.isLoading}
                     color="#333"
                     size="large"></ActivityIndicator>
+                <NextQuestion currentQuestion={this.state.current} newQuestion={(e) => this.newQuestion(e)}/>
             </View>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    quizWrap: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        backgroundColor: 'rgba(32,178,170,0.10)',
-        paddingHorizontal: 15,
-    },
-    questionWrap: {
-        //backgroundColor: 'rgba(255,255,255,0.9)',
-        backgroundColor: '#FCFCFC',
-        marginTop: 100,
-        marginBottom: 15,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 5,
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: {width: 1, height: 1},
-    },
-    questionText: {
-        color: '#111',
-        fontWeight: 'bold',
-        fontSize: 18,
-    },
-    button: {
-        marginTop: 10,
-        marginBottom: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 5,
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: {width: 1, height: 1},
-    },
-    buttonText: {
-        //color: '#111',
-        fontWeight: 'bold',
-        fontSize: 16,
-        textShadowOffset: {width: 1, height: 1},
-
-    },
-});
 
 module.exports = Quiz;

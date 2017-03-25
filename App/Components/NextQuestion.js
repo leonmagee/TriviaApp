@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import mainStyles from '../Styles/Variables';
+import variables from '../Styles/Variables';
 
 import {
     StyleSheet,
@@ -9,12 +9,15 @@ import {
 
 const styles = StyleSheet.create({
     nextQuestionWrap: {
-        marginTop: 100,
-        backgroundColor: mainStyles.brandPrimary,
+        marginBottom: 40,
+        backgroundColor: variables.brandThird,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
     },
     nextQuestion: {
         color: '#FFF',
-        fontSize: 30,
+        fontSize: 20,
+        fontWeight: 'bold',
     }
 });
 
@@ -42,8 +45,9 @@ class NextQuestion extends Component {
 
     render() {
         return (
-            <TouchableHighlight onPress={() => this.getNextQuestion()} style={styles.nextQuestionWrap}>
-                <Text style={styles.nextQuestion}>Next Question</Text>
+            <TouchableHighlight onPress={() => this.getNextQuestion()} style={styles.nextQuestionWrap}
+                                underlayColor={variables.brandThirdLite} >
+                <Text style={styles.nextQuestion}>NEXT QUESTION</Text>
             </TouchableHighlight>
         )
     }

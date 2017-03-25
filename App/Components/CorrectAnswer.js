@@ -1,27 +1,17 @@
-/**
- * Correct Answer Template
- * @todo make a wrapper component for both correct and false answers
- * @todo make a component to retrieve the corredct answer when the false answer is selected?
- * or else you can simply make the correct answer light up green when the flase answer is chosen
- */
 import React, {Component} from 'react';
+import variables from '../Styles/Variables';
 
 import {
     StyleSheet,
     Text,
     View,
-    //ActivityIndicator,
-    //WebView,
-    //TouchableHighlight,
 } from 'react-native';
 
 const styles = StyleSheet.create({
-    resultWrap: {
-        marginTop: 120,
-    },
     resultText: {
-        color: 'green',
-        fontSize: 30,
+        color: variables.brandSecond,
+        fontSize: 20,
+        fontWeight: 'bold',
     }
 });
 
@@ -33,16 +23,11 @@ class Correct extends Component {
 
     render() {
         return (
-            <View style={styles.resultWrap}>
-                <Text style={styles.resultText}>Your answer is correct!</Text>
+            <View>
+                <Text style={styles.resultText}>CORRECT!</Text>
             </View>
         )
     }
-
 }
 
 module.exports = Correct;
-
-
-
-
