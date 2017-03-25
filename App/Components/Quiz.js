@@ -1,10 +1,9 @@
-/**
- * Home JS file
- */
 import React, {Component} from 'react';
 var api = require('../Utils/api');
 var Entities = require('html-entities').XmlEntities;
-import Correct from './Correct';
+import CorrectAnswer from './CorrectAnswer';
+import FalseAnswer from './FalseAnswer';
+import NextQuestion from './NextQuestion';
 
 import {
     StyleSheet,
@@ -15,7 +14,7 @@ import {
     TouchableHighlight,
 } from 'react-native';
 
-class Main extends Component {
+class Quiz extends Component {
 
     constructor(props) {
         super(props);
@@ -32,13 +31,14 @@ class Main extends Component {
                 {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
             ],
             disabled: false,
-            correctAnswer: false,
-            falseAnswer: false,
+            answerResult: false,
         }
 
-        const questions = [];
-
         api.getQuestions().then((res) => {
+            /**
+             * when the question changes, just the state should change regarding the current question,
+             * so you don't need to navigate to a new page...
+             */
             console.log(res);
 
             /**
@@ -52,6 +52,12 @@ class Main extends Component {
             // question  (string) - "Which game did &quot;Sonic The Hedgehog&quot; make his first appearance in?"
             // type (string) - "multiple"
 
+            /**
+             * Shuffle Array
+             * @param array
+             * @returns {*}
+             * @todo use this same function to randomize animation on main page
+             */
             function shuffleArray(array) {
                 for (var i = array.length - 1; i > 0; i--) {
                     var j = Math.floor(Math.random() * (i + 1));
@@ -63,14 +69,14 @@ class Main extends Component {
             }
 
             const questions = [];
-            res.results.map((item) => {
+            res.results.map((trivia_question) => {
                 const answers = [];
-                answers.push({answer: item.correct_answer, correct: true});
-                item.incorrect_answers.map((item2) => {
-                    answers.push({answer: item2, correct: false});
+                answers.push({answer: trivia_question.correct_answer, correct: true});
+                trivia_question.incorrect_answers.map((incorrect_answer) => {
+                    answers.push({answer: incorrect_answer, correct: false});
                 })
                 questions.push({
-                    question: item.question,
+                    question: trivia_question.question,
                     answers: shuffleArray(answers),
                 })
             });
@@ -84,6 +90,11 @@ class Main extends Component {
         });
     }
 
+    newQuestion(e) {
+        //console.log( 'e is this: ' + e );
+        this.setState({current: e});
+    }
+
     chooseAnswer(key, correct) {
         console.log('answer chosen: ' + key + ' : ' + correct);
 
@@ -93,14 +104,14 @@ class Main extends Component {
             new_array[key].bg = '#3cb371';
             new_array[key].text = '#FAFAFA';
             new_array[key].shadow = 'rgba(0,0,0,0.2)';
-            this.setState({correctAnswer: true});
+            this.setState({answerResult: 'true-answer'});
 
         } else if (correct === 'false') {
 
             new_array[key].bg = '#ff4500';
             new_array[key].text = '#FAFAFA';
             new_array[key].shadow = 'rgba(0,0,0,0.2)';
-            this.setState({falseAnswer: true});
+            this.setState({answerResult: 'false-answer'});
         }
         else {
             // throw error?
@@ -140,7 +151,8 @@ class Main extends Component {
                             activeOpacity={1}
                             disabled={this.state.disabled}
                             onPress={() => this.chooseAnswer(key, correct_name)}>
-                            <Text style={[styles.buttonText,{color: this.state.buttonColor[key].text, textShadowColor: this.state.buttonColor[key].shadow}]}>{answer_now}
+                            <Text
+                                style={[styles.buttonText,{color: this.state.buttonColor[key].text, textShadowColor: this.state.buttonColor[key].shadow}]}>{answer_now}
                                 - {correct_name}</Text>
                         </TouchableHighlight>
                     );
@@ -163,9 +175,22 @@ class Main extends Component {
             )
         }
 
+        switch (this.state.answerResult) {
+            case 'true-answer':
+                var AnswerResult = <CorrectAnswer />;
+                break;
+            case 'false-answer':
+                var AnswerResult = <FalseAnswer />;
+                break;
+            default:
+                var AnswerResult = <View></View>;
+        }
+
+
         return (
             <View style={styles.quizWrap}>
-                <Correct />
+                <NextQuestion currentQuestion={this.state.current} newQuestion={(e) => this.newQuestion(e)}/>
+                {AnswerResult}
                 {questions}
                 <ActivityIndicator
                     animating={this.state.isLoading}
@@ -181,7 +206,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: 'rgba(32,178,170,0.20)',
+        backgroundColor: 'rgba(32,178,170,0.10)',
         paddingHorizontal: 15,
     },
     questionWrap: {
@@ -220,4 +245,4 @@ const styles = StyleSheet.create({
     },
 });
 
-module.exports = Main;
+module.exports = Quiz;
