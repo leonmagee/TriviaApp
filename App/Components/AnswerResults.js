@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import variables from '../Styles/Variables';
 
 import {
     StyleSheet,
@@ -9,13 +8,14 @@ import {
 
 const styles = StyleSheet.create({
     resultText: {
-        color: variables.brandSecond,
         fontSize: 20,
         fontWeight: 'bold',
+        marginTop: 10,
+        textAlign: 'center',
     }
 });
 
-class Correct extends Component {
+class AnswerResults extends Component {
 
     constructor(props) {
         super(props);
@@ -24,10 +24,10 @@ class Correct extends Component {
     render() {
         return (
             <View>
-                <Text style={styles.resultText}>CORRECT!</Text>
+                <Text style={[styles.resultText, {color: this.props.color}]}>{this.props.text}</Text>
             </View>
         )
     }
 }
 
-module.exports = Correct;
+module.exports = AnswerResults;

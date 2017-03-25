@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
         backgroundColor: variables.brandThird,
         paddingHorizontal: 10,
         paddingVertical: 5,
+        borderRadius: 5,
     },
     nextQuestion: {
         color: '#FFF',
@@ -28,7 +29,6 @@ class NextQuestion extends Component {
         this.state = {
             currentQuestion: props.currentQuestion,
         }
-
         this.newQuestion = props.newQuestion;
     }
 
@@ -39,10 +39,8 @@ class NextQuestion extends Component {
          */
         let updated_number = this.state.currentQuestion + 1;
         this.setState({currentQuestion: updated_number});
-        console.log('number: ' + updated_number);
         this.newQuestion(updated_number);
     }
-
     render() {
         return (
             <TouchableHighlight onPress={() => this.getNextQuestion()} style={styles.nextQuestionWrap}
@@ -51,7 +49,6 @@ class NextQuestion extends Component {
             </TouchableHighlight>
         )
     }
-
 }
 
 module.exports = NextQuestion;

@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 var api = require('../Utils/api');
 var Entities = require('html-entities').XmlEntities;
-import CorrectAnswer from './CorrectAnswer';
-import FalseAnswer from './FalseAnswer';
+//import CorrectAnswer from './CorrectAnswer';
+//import FalseAnswer from './FalseAnswer';
+import AnswerResults from './AnswerResults';
 import NextQuestion from './NextQuestion';
 import variables from '../Styles/Variables';
 
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: 'rgba(32,178,170,0.10)',
-        paddingTop: 100,
+        paddingTop: 75,
         paddingHorizontal: 15,
     },
     questionWrap: {
@@ -31,14 +32,18 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 15,
         borderRadius: 5,
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: {width: 1, height: 1},
+        borderColor: variables.brandThirdLite,
+        borderWidth: 2,
+        // borderColor: variables.brandThird,
+        // borderWidth: 3,
+        //shadowColor: '#000',
+        //shadowOpacity: 0.2,
+        //shadowOffset: {width: 1, height: 1},
     },
     questionText: {
-        color: '#111',
         fontWeight: 'bold',
         fontSize: 18,
+        color: variables.brandThird,
     },
     button: {
         marginTop: 10,
@@ -46,23 +51,39 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 15,
         borderRadius: 5,
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: {width: 1, height: 1},
+        borderWidth: 1,
+        // shadowColor: '#000',
+        // shadowOpacity: 0.2,
+        // shadowOffset: {width: 1, height: 1},
     },
     buttonText: {
         fontWeight: 'bold',
+        textAlign: 'center',
         fontSize: 16,
         textShadowOffset: {width: 1, height: 1},
-
     },
+    headerWrap: {
+        height: 70,
+        padding: 5,
+    },
+    headerText: {
+        textAlign: 'center',
+        padding: 3,
+    }
 });
 
+// let defaultButtonColors = [
+//     {bg: '#FCFCFC', text: '#444', shadow: '#FFF'},
+//     {bg: '#FCFCFC', text: '#444', shadow: '#FFF'},
+//     {bg: '#FCFCFC', text: '#444', shadow: '#FFF'},
+//     {bg: '#FCFCFC', text: '#444', shadow: '#FFF'},
+// ];
+
 let defaultButtonColors = [
-    {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-    {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-    {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-    {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
 ];
 
 class Quiz extends Component {
@@ -81,15 +102,10 @@ class Quiz extends Component {
             correctAnswers: 0,
             falseAnswers: 0,
             correctAnswerKey: false,
+            nextQuestion: false,
         }
 
         api.getQuestions().then((res) => {
-            /**
-             * when the question changes, just the state should change regarding the current question,
-             * so you don't need to navigate to a new page...
-             */
-            console.log(res);
-
             /**
              * for multiple choice questions
              * @todo adapter class to be extended for different APIs?
@@ -131,30 +147,46 @@ class Quiz extends Component {
                 questions.push({
                     question: trivia_question.question,
                     answers: shuffleArray(answers),
-                })
+                });
             });
-
-            //console.log(questions);
-
             this.setState({questions: questions});
-
             this.setState({isLoading: false});
 
+            /**
+             * Get array of correct answer locations
+             * @type {Array}
+             */
+            const answerKeyArray = [];
+            const current_question_new = this.state.questions;
+            current_question_new.map((current_question_new_item, key_main) => {
+                current_question_new_item.answers.map((item, key) => {
+                    if (item.correct == true) {
+                        answerKeyArray[key_main] = key;
+                    }
+                });
+            });
+
+            this.setState({correctAnswerKey: answerKeyArray});
+
+
         });
+
+
     }
 
     newQuestion(e) {
         let defaultButtonColorsNew = [
-            {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-            {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-            {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
-            {bg: '#FCFCFC', text: '#111', shadow: '#FFF'},
+            {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+            {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+            {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+            {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
         ];
         this.setState({
                 current: e,
                 disabled: false,
                 answerResult: false,
                 buttonColor: defaultButtonColorsNew,
+                nextQuestion: false,
             }
         );
     }
@@ -166,24 +198,34 @@ class Quiz extends Component {
      * @param correct
      */
     chooseAnswer(key, correct) {
-        console.log('answer chosen: ' + key + ' : ' + correct);
-
         const new_array = this.state.buttonColor;
-
         if (correct === 'true') {
-            //new_array[key].bg = '#3cb371';
             new_array[key].bg = variables.brandSecond;
+            new_array[key].borderColor = variables.brandSecond;
             new_array[key].text = '#FAFAFA';
             new_array[key].shadow = 'rgba(0,0,0,0.2)';
-            this.setState({answerResult: 'true-answer'});
-
+            this.setState({
+                answerResult: 'true-answer',
+                correctAnswers: ( this.state.correctAnswers + 1)
+            });
         } else if (correct === 'false') {
-
-            //new_array[key].bg = '#ff4500';
             new_array[key].bg = variables.brandPrimary;
+            new_array[key].borderColor = variables.brandPrimary;
             new_array[key].text = '#FAFAFA';
             new_array[key].shadow = 'rgba(0,0,0,0.2)';
-            this.setState({answerResult: 'false-answer'});
+            this.setState({
+                answerResult: 'false-answer',
+                falseAnswers: ( this.state.falseAnswers + 1)
+            });
+
+
+            // set correct answer to green
+            const correct_key = this.state.correctAnswerKey[this.state.current];
+            new_array[correct_key].bg = variables.brandSecond;
+            new_array[correct_key].borderColor = variables.brandSecond;
+            new_array[correct_key].text = '#FAFAFA';
+            new_array[correct_key].shadow = 'rgba(0,0,0,0.2)';
+
 
             /**
              * Here I need to loop change the color of the correct answer to green.
@@ -198,6 +240,7 @@ class Quiz extends Component {
         this.setState({
             buttonColor: new_array,
             disabled: true,
+            nextQuestion: true,
         });
     }
 
@@ -224,14 +267,13 @@ class Quiz extends Component {
                     return (
                         <TouchableHighlight
                             key={key}
-                            style={[styles.button, {backgroundColor: this.state.buttonColor[key].bg}]}
+                            style={[styles.button, {backgroundColor: this.state.buttonColor[key].bg, borderColor: this.state.buttonColor[key].borderColor}]}
                             underlayColor="#FFF"
                             activeOpacity={1}
                             disabled={this.state.disabled}
                             onPress={() => this.chooseAnswer(key, correct_name)}>
                             <Text
-                                style={[styles.buttonText,{color: this.state.buttonColor[key].text, textShadowColor: this.state.buttonColor[key].shadow}]}>{answer_now}
-                                - {correct_name}</Text>
+                                style={[styles.buttonText,{color: this.state.buttonColor[key].text, textShadowColor: this.state.buttonColor[key].shadow}]}>{answer_now}</Text>
                         </TouchableHighlight>
                     );
                 }
@@ -255,26 +297,37 @@ class Quiz extends Component {
 
         switch (this.state.answerResult) {
             case 'true-answer':
-                var AnswerResult = <CorrectAnswer />;
+                //var AnswerResult = <CorrectAnswer />;
+                var AnswerResult = <AnswerResults text='CORRECT!' color={variables.brandSecond}/>;
                 break;
             case 'false-answer':
-                var AnswerResult = <FalseAnswer />;
+                var AnswerResult = <AnswerResults text='INCORRECT!' color={variables.brandPrimary}/>;
                 break;
             default:
                 var AnswerResult = <View></View>;
         }
 
+        if (this.state.nextQuestion) {
+            var nextQuestionLink = <NextQuestion currentQuestion={this.state.current}
+                                                 newQuestion={(e) => this.newQuestion(e)}/>;
+        } else {
+            var nextQuestionLink = <View></View>;
+        }
 
         return (
             <View style={styles.quizWrap}>
-                <Text>Question {this.state.current + 1} of 10</Text>
-                {AnswerResult}
+                <View style={styles.headerWrap}>
+                    <Text style={styles.headerText}>Question {this.state.current + 1} of 10</Text>
+                    <Text style={styles.headerText}>Correct: {this.state.correctAnswers} -
+                        Incorrect: {this.state.falseAnswers}</Text>
+                    {AnswerResult}
+                </View>
                 {questions}
                 <ActivityIndicator
                     animating={this.state.isLoading}
                     color="#333"
                     size="large"></ActivityIndicator>
-                <NextQuestion currentQuestion={this.state.current} newQuestion={(e) => this.newQuestion(e)}/>
+                {nextQuestionLink}
             </View>
         )
     }
