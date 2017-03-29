@@ -3,16 +3,17 @@
  * First file to load - I should break apart the animations into smaller components
  */
 import React, {Component} from 'react';
-import Quiz from './Quiz';
+//import Quiz from './Quiz';
 import SvgElement from './SvgElement';
 import svg_question from '../SVG/question';
+import StartQuizButton from './StartQuizButton';
 
 import {
     StyleSheet,
     Text,
     View,
     Dimensions,
-    TouchableHighlight,
+    //TouchableHighlight,
     Animated,
 } from 'react-native';
 
@@ -39,18 +40,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowOffset: {width: 1, height: 1},
     },
-    buttonWrap: {
-        backgroundColor: 'rgba(255,255,255,0.8)',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        marginTop: 15,
-        borderRadius: 5,
-    },
-    button: {
-        color: '#E51D12',
-        fontWeight: 'bold',
-        fontSize: 30,
-    },
+    // buttonWrap: {
+    //     backgroundColor: 'rgba(255,255,255,0.8)',
+    //     paddingHorizontal: 10,
+    //     paddingVertical: 5,
+    //     marginTop: 15,
+    //     borderRadius: 5,
+    // },
+    // button: {
+    //     color: '#E51D12',
+    //     fontWeight: 'bold',
+    //     fontSize: 30,
+    // },
     gridItem: {
         backgroundColor: '#20b2aa', // 'lightseagreen', //#20b2aa
         justifyContent: 'center',
@@ -82,14 +83,13 @@ class Main extends Component {
         super(props);
     }
 
-    startQuiz() {
-        console.log('lets start the quiz');
-        this.props.navigator.push({
-            component: Quiz,
-            title: 'Quizian',
-            navigationBarHidden: false
-        });
-    }
+    // startQuiz() {
+    //     this.props.navigator.push({
+    //         component: Quiz,
+    //         title: 'Quizian',
+    //         navigationBarHidden: false
+    //     });
+    // }
 
     componentWillMount() {
         this.animatedValue = [];
@@ -138,10 +138,7 @@ class Main extends Component {
             <View style={styles.homeWrap}>
                 <View style={[styles.homeTextWrap, {width: width, height: height}]}>
                     <Text style={styles.homeText}>QUIZIAN</Text>
-                    <TouchableHighlight style={styles.buttonWrap} onPress={() => this.startQuiz()}
-                                        underlayColor="rgba(255,255,255,0.9)">
-                        <Text style={styles.button}>START</Text>
-                    </TouchableHighlight>
+                    <StartQuizButton buttonText="START" navigator={this.props.navigator}/>
                 </View>
                 {grid}
             </View>

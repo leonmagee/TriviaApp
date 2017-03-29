@@ -7,6 +7,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "art": "^0.10.1",
+    "chartjs": "^0.3.24",
     "html-entities": "^1.2.0",
     "react": "15.4.1",
     "react-native": "0.39.2",

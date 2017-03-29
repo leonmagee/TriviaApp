@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import variables from '../Styles/Variables';
+import StartQuizButton from './StartQuizButton';
 
 import {
     StyleSheet,
@@ -39,6 +40,7 @@ class QuizResult extends Component {
                 <Text style={styles.quizResultText}>
                     Congratulations! Your score is...
                 </Text>
+                <StartQuizButton buttonText="NEW QUIZ" navigator={this.props.navigator}/>
             </View>
         )
     }

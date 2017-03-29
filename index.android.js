@@ -1,53 +1,39 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+ * IOS Index file - this code can be shared between index.ios and index.android
+ * @todo change NavigatorIOS to android equivalent
  */
-
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+//import Main from './App/Components/Main';
+//import Main from './App/Components/Quiz';
+import Main from './App/Components/QuizResult';
+//import Main from './App/Components/StaggerTest';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    NavigatorIOS
 } from 'react-native';
 
 export default class TriviaApp extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
-  }
+    render() {
+        return (
+            <NavigatorIOS
+                style={styles.container}
+                initialRoute={{
+                    component: Main,
+                    title: 'Home',
+                }}
+                navigationBarHidden={false}
+            />
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    container: {
+        flex: 1
+    },
 });
 
 AppRegistry.registerComponent('TriviaApp', () => TriviaApp);

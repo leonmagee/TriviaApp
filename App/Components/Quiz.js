@@ -88,8 +88,8 @@ let defaultButtonColors = [
 
 class Quiz extends Component {
 
-    constructor(props) {
-        super(props);
+    constructor() {
+        super(); // calls the constructor method of 'Component'
 
         this.state = {
             isLoading: true,
