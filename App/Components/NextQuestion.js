@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import variables from '../Styles/Variables';
+//import QuizResult from './QuizResult';
 
 import {
     StyleSheet,
@@ -17,8 +18,10 @@ const styles = StyleSheet.create({
     },
     nextQuestion: {
         color: '#FFF',
-        fontSize: 20,
+        fontSize: 19,
         fontWeight: 'bold',
+        textAlign: 'center',
+        paddingVertical: 4,
     }
 });
 
@@ -38,14 +41,34 @@ class NextQuestion extends Component {
          * skips the first update???
          */
         let updated_number = this.state.currentQuestion + 1;
-        this.setState({currentQuestion: updated_number});
-        this.newQuestion(updated_number);
+        if ( this.props.numberQuestions === updated_number ) {
+            //console.log( 'you maxed out' );
+            /**
+             * Navigate to new page
+             */
+
+            this.props.displayResults();
+
+
+                // this.props.navigator.push({
+                //     component: QuizResult,
+                //     title: 'Results',
+                //     passProps: {
+                //         score: 33,
+                //     },
+                //     navigationBarHidden: false
+                // });
+
+        } else {
+            this.setState({currentQuestion: updated_number});
+            this.newQuestion(updated_number);
+        }
     }
     render() {
         return (
             <TouchableHighlight onPress={() => this.getNextQuestion()} style={styles.nextQuestionWrap}
                                 underlayColor={variables.brandThirdLite} >
-                <Text style={styles.nextQuestion}>NEXT QUESTION</Text>
+                <Text style={styles.nextQuestion}>{this.props.text}</Text>
             </TouchableHighlight>
         )
     }

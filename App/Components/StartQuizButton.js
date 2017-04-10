@@ -26,11 +26,12 @@ const styles = StyleSheet.create({
 
 class StartQuizButton extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
 
     startQuiz() {
+        console.log(this.props.navigator);
         this.props.navigator.push({
             component: Quiz,
             title: 'Quizian',

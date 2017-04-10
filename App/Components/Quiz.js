@@ -1,156 +1,113 @@
-import React, {Component} from 'react';
-var api = require('../Utils/api');
-var Entities = require('html-entities').XmlEntities;
-//import CorrectAnswer from './CorrectAnswer';
-//import FalseAnswer from './FalseAnswer';
-import AnswerResults from './AnswerResults';
-import NextQuestion from './NextQuestion';
-import variables from '../Styles/Variables';
+import React, {Component} from 'react'
+var api = require('../Utils/api')
+var Entities = require('html-entities').XmlEntities
+import AnswerResults from './AnswerResults'
+import NextQuestion from './NextQuestion'
+import variables from '../Styles/Variables'
+import styles from '../Styles/DefaultStyles'
+import QuizResult from './QuizResult'
 
 import {
-    StyleSheet,
     Text,
     View,
     ActivityIndicator,
-    WebView,
     TouchableHighlight,
-} from 'react-native';
+    Platform,
+} from 'react-native'
 
-const styles = StyleSheet.create({
-    quizWrap: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: 'rgba(32,178,170,0.10)',
-        paddingTop: 75,
-        paddingHorizontal: 15,
-    },
-    questionWrap: {
-        backgroundColor: '#FCFCFC',
-        marginTop: 15,
-        marginBottom: 15,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 5,
-        borderColor: variables.brandThirdLite,
-        borderWidth: 2,
-        // borderColor: variables.brandThird,
-        // borderWidth: 3,
-        //shadowColor: '#000',
-        //shadowOpacity: 0.2,
-        //shadowOffset: {width: 1, height: 1},
-    },
-    questionText: {
-        fontWeight: 'bold',
-        fontSize: 18,
-        color: variables.brandThird,
-    },
-    button: {
-        marginTop: 10,
-        marginBottom: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 5,
-        borderWidth: 1,
-        // shadowColor: '#000',
-        // shadowOpacity: 0.2,
-        // shadowOffset: {width: 1, height: 1},
-    },
-    buttonText: {
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: 16,
-        textShadowOffset: {width: 1, height: 1},
-    },
-    headerWrap: {
-        height: 70,
-        padding: 5,
-    },
-    headerText: {
-        textAlign: 'center',
-        padding: 3,
-    }
-});
+/**
+ * Array of button styles
+ * Clone using JSON.stringify to create copy without reference
+ */
+let defaultButtonColorsOrig = [
+    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
+]
+defaultButtonColors = JSON.parse(JSON.stringify(defaultButtonColorsOrig))
 
-// let defaultButtonColors = [
-//     {bg: '#FCFCFC', text: '#444', shadow: '#FFF'},
-//     {bg: '#FCFCFC', text: '#444', shadow: '#FFF'},
-//     {bg: '#FCFCFC', text: '#444', shadow: '#FFF'},
-//     {bg: '#FCFCFC', text: '#444', shadow: '#FFF'},
-// ];
-
-let defaultButtonColors = [
-    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
-    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
-    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
-    {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
-];
 
 class Quiz extends Component {
 
     constructor() {
-        super(); // calls the constructor method of 'Component'
+        super() // calls the constructor method of 'Component'
 
+        /**
+         * @todo document what each state variable is for
+         */
         this.state = {
-            isLoading: true,
-            error: false,
-            questions: false,
-            current: 0,
-            buttonColor: defaultButtonColors,
-            disabled: false,
-            answerResult: false,
-            correctAnswers: 0,
-            falseAnswers: 0,
-            correctAnswerKey: false,
-            nextQuestion: false,
+            isLoading: true, // used to show loading spinner
+            //error: false,
+            questions: false, // ???
+            current: 0, // current question
+            buttonColor: defaultButtonColors, // array of colors ofr each button
+            disabled: false, // when the final question has been answered?
+            //answerResult: false, // becomes true when a question has been answered
+            correctAnswers: 0, // total number of current correct answers
+            falseAnswers: 0, // total number of current incorrect answers
+            correctAnswerKey: false, // the array position of the current correct answer?
+            nextQuestion: false, // to show the next question link
+            numberQuestions: 2, // total number of questions
+            quizContents: null, // current quiz body contents
+            nextQuestionLink: <View></View>,
+            answerResultString: <View></View>,
         }
 
-        api.getQuestions().then((res) => {
-            /**
-             * for multiple choice questions
-             * @todo adapter class to be extended for different APIs?
-             */
-            // results: Array[10]
-            // Object
-            // category (string) - "Entertainment: Video Games"
-            // correct_answer (string) - "Rad Mobile"
-            // incorrect_answers - Array[3]
-            // question  (string) - "Which game did &quot;Sonic The Hedgehog&quot; make his first appearance in?"
-            // type (string) - "multiple"
+        this.getNewData();
+
+
+
+    }
+
+    componentWillMount() {
+        console.log('component will mount');
+    }
+
+    componentDidMount() {
+        console.log('component did mount')
+        this.getQuestions();
+        // this.setState(
+        //     {quizContents: <View><Text>New quiz state</Text></View>}
+        // )
+
+    }
+
+    getNewData() {
+
+        api.getQuestions(this.state.numberQuestions).then((res) => {
 
             /**
-             * Shuffle Array
-             * @param array
-             * @returns {*}
-             * @todo use this same function to randomize animation on main page
+             * Shuffle Array - by default correct answer is always in same position
+             * @todo have file for helper functions?
              */
             function shuffleArray(array) {
                 for (var i = array.length - 1; i > 0; i--) {
-                    var j = Math.floor(Math.random() * (i + 1));
-                    var temp = array[i];
-                    array[i] = array[j];
-                    array[j] = temp;
+                    var j = Math.floor(Math.random() * (i + 1))
+                    var temp = array[i]
+                    array[i] = array[j]
+                    array[j] = temp
                 }
-                return array;
+                return array
             }
 
-            const questions = [];
+            const questions = []
             res.results.map((trivia_question) => {
-                const answers = [];
-                answers.push({answer: trivia_question.correct_answer, correct: true});
+                const answers = []
+                answers.push({answer: trivia_question.correct_answer, correct: true})
                 trivia_question.incorrect_answers.map((incorrect_answer) => {
-                    answers.push({answer: incorrect_answer, correct: false});
+                    answers.push({answer: incorrect_answer, correct: false})
                 })
-                /**
-                 * @todo I need to get the key of the correct answer ewre, not inside the render method..
-                 */
                 questions.push({
                     question: trivia_question.question,
                     answers: shuffleArray(answers),
                 });
             });
-            this.setState({questions: questions});
-            this.setState({isLoading: false});
+            this.setState({
+                questions: questions,
+                isLoading: false
+            })
+            //this.setState({isLoading: false})
 
             /**
              * Get array of correct answer locations
@@ -161,90 +118,159 @@ class Quiz extends Component {
             current_question_new.map((current_question_new_item, key_main) => {
                 current_question_new_item.answers.map((item, key) => {
                     if (item.correct == true) {
-                        answerKeyArray[key_main] = key;
+                        answerKeyArray[key_main] = key
                     }
                 });
             });
 
-            this.setState({correctAnswerKey: answerKeyArray});
-
-
+            this.setState({correctAnswerKey: answerKeyArray})
         });
 
+    }
 
+    displayResults() {
+        /**
+         * Change this to showing the state on the current page of the results
+         * I can still import the contents from the different module, I just can't use
+         * navigation
+         */
+        //console.log('time for results!!!');
+        // this.props.navigator.push({
+        //     component: QuizResult,
+        //     title: 'Results',
+        //     passProps: {
+        //         score: 33,
+        //     },
+        //     navigationBarHidden: false
+        // });
     }
 
     newQuestion(e) {
-        let defaultButtonColorsNew = [
-            {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
-            {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
-            {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
-            {bg: '#FCFCFC', text: '#444', shadow: '#FFF', borderColor: variables.brandThirdLite},
-        ];
+
         this.setState({
                 current: e,
                 disabled: false,
-                answerResult: false,
-                buttonColor: defaultButtonColorsNew,
+                //answerResult: false,
+                buttonColor: defaultButtonColorsOrig,
                 nextQuestion: false,
             }
         );
+
+        // console.log( 'current number: ' + this.state.current );
+        // console.log( 'number questions: ' + this.state.numberQuestions );
+        //
+
+
+        //     current: 0, // current question
+        //     correctAnswers: 0, // total number of current correct answers
+        //     falseAnswers: 0, // total number of current incorrect answers
+        //     numberQuestions: 2, // total number of questions
+        //     quizContents: null, // current quiz body contents
+
     }
 
     /**
-     * Change background color of selected question
-     * Also make the correct question green to indicate what the right answer was if you got it wrong...
-     * @param key
-     * @param correct
+     * Change background color of selected question and highlight correct answer
      */
     chooseAnswer(key, correct) {
-        const new_array = this.state.buttonColor;
+        const new_array = this.state.buttonColor
+        new_array[key].text = '#FAFAFA'
+        new_array[key].shadow = 'rgba(0,0,0,0.2)'
+
+        var NextQuestionLink = <NextQuestion currentQuestion={this.state.current}
+                                             newQuestion={(e) => this.newQuestion(e)}
+                                             numberQuestions={this.state.numberQuestions}
+                                             navigator={this.props.navigator}
+                                             text="NEXT QUESTION"
+                                             displayResults={() => this.displayResults()}
+        />
+
         if (correct === 'true') {
-            new_array[key].bg = variables.brandSecond;
-            new_array[key].borderColor = variables.brandSecond;
-            new_array[key].text = '#FAFAFA';
-            new_array[key].shadow = 'rgba(0,0,0,0.2)';
+            new_array[key].bg = variables.brandSecond
+            new_array[key].borderColor = variables.brandSecond
+            var AnswerResultString = <AnswerResults text='CORRECT!' color={variables.brandSecond}/>
+            // this.setState({
+            //     answerResultString: AnswerResultString,
+            //     nextQuestionLink: NextQuestionLink,
+            // })
+            /**
+             * the answerResult state property might be unnecessary
+             */
             this.setState({
-                answerResult: 'true-answer',
-                correctAnswers: ( this.state.correctAnswers + 1)
+                //answerResult: 'true-answer',
+                correctAnswers: ( this.state.correctAnswers + 1),
+                answerResultString: AnswerResultString,
+                nextQuestionLink: NextQuestionLink,
             });
         } else if (correct === 'false') {
-            new_array[key].bg = variables.brandPrimary;
-            new_array[key].borderColor = variables.brandPrimary;
-            new_array[key].text = '#FAFAFA';
-            new_array[key].shadow = 'rgba(0,0,0,0.2)';
+            new_array[key].bg = variables.brandPrimary
+            new_array[key].borderColor = variables.brandPrimary
+            var AnswerResultString = <AnswerResults text='INCORRECT!' color={variables.brandPrimary}/>
             this.setState({
-                answerResult: 'false-answer',
-                falseAnswers: ( this.state.falseAnswers + 1)
+                //answerResult: 'false-answer',
+                falseAnswers: ( this.state.falseAnswers + 1),
+                answerResultString: AnswerResultString,
+                nextQuestionLink: NextQuestionLink,
             });
 
-
             // set correct answer to green
-            const correct_key = this.state.correctAnswerKey[this.state.current];
-            new_array[correct_key].bg = variables.brandSecond;
-            new_array[correct_key].borderColor = variables.brandSecond;
-            new_array[correct_key].text = '#FAFAFA';
-            new_array[correct_key].shadow = 'rgba(0,0,0,0.2)';
-
-
-            /**
-             * Here I need to loop change the color of the correct answer to green.
-             * @todo I can just create a state that reflects the key of the correct answers, and then
-             * get that state here to update the color of the correct answer?
-             */
-        }
-        else {
-            // throw error?
+            const correct_key = this.state.correctAnswerKey[this.state.current]
+            new_array[correct_key].bg = variables.brandSecond
+            new_array[correct_key].borderColor = variables.brandSecond
+            new_array[correct_key].text = '#FAFAFA'
+            new_array[correct_key].shadow = 'rgba(0,0,0,0.2)'
         }
 
         this.setState({
             buttonColor: new_array,
             disabled: true,
             nextQuestion: true,
-        });
+        })
+
+
+        /**
+         * Separate answer results into different method?
+         */
+        // switch (this.state.answerResult) {
+        //     case 'true-answer':
+        //         //var AnswerResult = <CorrectAnswer />;
+        //         var AnswerResultString = <AnswerResults text='CORRECT!' color={variables.brandSecond}/>;
+        //         break;
+        //     case 'false-answer':
+        //         var AnswerResultString = <AnswerResults text='INCORRECT!' color={variables.brandPrimary}/>;
+        //         break;
+        //     default:
+        //         var AnswerResultString = <View></View>;
+        // }
+
+        //console.log(this.state);
+        //
+        // if (this.state.nextQuestion) {
+        //     /**
+        //      * I can change the link to see results after the final question has been clicked...
+        //      * @type {XML}
+        //      */
+        //     //console.log( 'current: ' + this.state.current);
+        //     //console.log( 'num questions: ' + this.state.numberQuestions);
+        //     var NextQuestionLink = <NextQuestion currentQuestion={this.state.current}
+        //                                                 newQuestion={(e) => this.newQuestion(e)}
+        //                                                 numberQuestions={this.state.numberQuestions}
+        //                                                 navigator={this.props.navigator}
+        //                                                 text="NEXT QUESTION"
+        //                                                 displayResults={() => this.displayResults()}
+        //     />
+        // } else {
+        //     var NextQuestionLink = <View></View>;
+        // }
+
+        // this.setState({
+        //     answerResultString: AnswerResultString,
+        //     nextQuestionLink: NextQuestionLink,
+        // })
+
     }
 
-    render() {
+    getQuestions() {
 
         if (this.state.questions) {
 
@@ -253,7 +279,7 @@ class Quiz extends Component {
              * @todo this isn't always working?
              * Maybe find a better api?
              */
-            const entities = new Entities();
+            const entities = new Entities()
 
             const current_question = this.state.questions[this.state.current];
             const answers = current_question.answers.map((item, key) => {
@@ -267,13 +293,19 @@ class Quiz extends Component {
                     return (
                         <TouchableHighlight
                             key={key}
-                            style={[styles.button, {backgroundColor: this.state.buttonColor[key].bg, borderColor: this.state.buttonColor[key].borderColor}]}
+                            style={[styles.button, {
+                                backgroundColor: this.state.buttonColor[key].bg,
+                                borderColor: this.state.buttonColor[key].borderColor
+                            }]}
                             underlayColor="#FFF"
                             activeOpacity={1}
                             disabled={this.state.disabled}
                             onPress={() => this.chooseAnswer(key, correct_name)}>
                             <Text
-                                style={[styles.buttonText,{color: this.state.buttonColor[key].text, textShadowColor: this.state.buttonColor[key].shadow}]}>{answer_now}</Text>
+                                style={[styles.buttonText, {
+                                    color: this.state.buttonColor[key].text,
+                                    textShadowColor: this.state.buttonColor[key].shadow
+                                }]}>{answer_now}</Text>
                         </TouchableHighlight>
                     );
                 }
@@ -295,39 +327,40 @@ class Quiz extends Component {
             )
         }
 
-        switch (this.state.answerResult) {
-            case 'true-answer':
-                //var AnswerResult = <CorrectAnswer />;
-                var AnswerResult = <AnswerResults text='CORRECT!' color={variables.brandSecond}/>;
-                break;
-            case 'false-answer':
-                var AnswerResult = <AnswerResults text='INCORRECT!' color={variables.brandPrimary}/>;
-                break;
-            default:
-                var AnswerResult = <View></View>;
-        }
-
-        if (this.state.nextQuestion) {
-            var nextQuestionLink = <NextQuestion currentQuestion={this.state.current}
-                                                 newQuestion={(e) => this.newQuestion(e)}/>;
-        } else {
-            var nextQuestionLink = <View></View>;
-        }
-
-        return (
-            <View style={styles.quizWrap}>
+        this.setState({
+            quizContents: <View>
                 <View style={styles.headerWrap}>
-                    <Text style={styles.headerText}>Question {this.state.current + 1} of 10</Text>
+                    <Text style={styles.headerText}>Question {this.state.current + 1}
+                        of {this.state.numberQuestions}</Text>
                     <Text style={styles.headerText}>Correct: {this.state.correctAnswers} -
                         Incorrect: {this.state.falseAnswers}</Text>
-                    {AnswerResult}
+                    {this.state.answerResultString}
                 </View>
                 {questions}
                 <ActivityIndicator
                     animating={this.state.isLoading}
                     color="#333"
                     size="large"></ActivityIndicator>
-                {nextQuestionLink}
+                <View style={styles.footerWrap}>
+                    {this.state.nextQuestionLink}
+                </View>
+            </View>
+        })
+
+    }
+
+    render() {
+
+        /**
+         * In this method I need to check what the current state is???
+         */
+        //this.getQuestions();
+        console.log(this.state);
+        //console.log(Platform);
+
+        return (
+            <View style={styles.quizWrap}>
+                {this.state.quizContents}
             </View>
         )
     }

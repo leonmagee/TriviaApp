@@ -5,30 +5,28 @@
 import React, {Component} from 'react';
 //import Main from './App/Components/Main';
 //import Main from './App/Components/Quiz';
-import Main from './App/Components/QuizResult';
+//import Main from './App/Components/QuizResult';
 //import Main from './App/Components/StaggerTest';
 import {
     AppRegistry,
     StyleSheet,
     Text,
     View,
-    NavigatorIOS
 } from 'react-native';
 
 export default class TriviaApp extends Component {
     render() {
+        console.warn(JSON.stringify(this.state, null, 2))
+        //throw new Error('yoooooo')
         return (
-            <NavigatorIOS
-                style={styles.container}
-                initialRoute={{
-                    component: Main,
-                    title: 'Home',
-                }}
-                navigationBarHidden={false}
-            />
+            <View style={styles.container}>
+                <Text>Hello! Android Dev is working!</Text>
+            </View>
         )
     }
 }
+
+
 
 const styles = StyleSheet.create({
     container: {

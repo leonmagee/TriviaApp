@@ -3,9 +3,9 @@
  * @type {{getQuestions: (())}}
  */
 const api = {
-    getQuestions() {
+    getQuestions(n) {
 
-        const url = 'https://opentdb.com/api.php?amount=10&type=multiple';
+        const url = 'https://opentdb.com/api.php?amount=' + n + '&type=multiple';
         //const url = 'https://opentdb.com/api.php?amount=10&type=multiple&encode=url3986';
         //const url = 'https://opentdb.com/api.php?amount=10&type=multiple&encode=base64';
 
