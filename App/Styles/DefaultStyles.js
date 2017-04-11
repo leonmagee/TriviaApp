@@ -10,11 +10,14 @@ const { width } = Dimensions.get('window')
 const button_width = ( width * 0.9 )
 
 const defaultStyles = StyleSheet.create({
+    outerWrap: {
+        flex: 1,
+        backgroundColor: 'rgba(32,178,170,0.10)',
+    },
     quizWrap: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: 'rgba(32,178,170,0.10)',
         paddingTop: 75,
         paddingHorizontal: 15,
     },
@@ -28,6 +31,10 @@ const defaultStyles = StyleSheet.create({
         borderColor: variables.brandThirdLite,
         borderWidth: 2,
         width: button_width
+    },
+    activityIndicator: {
+        flex: 1,
+        justifyContent: 'center',
     },
     questionText: {
         fontWeight: 'bold',
@@ -60,7 +67,7 @@ const defaultStyles = StyleSheet.create({
     footerWrap: {
         height: 100,
         justifyContent: 'flex-end',
-    }
+    },
 });
 
 module.exports = defaultStyles;

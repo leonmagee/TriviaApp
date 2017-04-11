@@ -52,11 +52,6 @@ class Quiz extends Component {
             quizContents: null, // current quiz body contents
             nextQuestionLink: <View></View>,
             answerResultString: <View></View>,
-            quizContentsNew: <View style={styles.activityIndicator}>
-                <ActivityIndicator
-                    color="#333"
-                    size="large"></ActivityIndicator>
-            </View>,
         }
 
         this.getNewData();
@@ -126,23 +121,6 @@ class Quiz extends Component {
             });
 
             this.setState({correctAnswerKey: answerKeyArray})
-        }).then(() => {
-            console.log( 'then has happened?')
-
-            this.setState({
-                quizContentsNew: <View style={styles.testQuestionsWrap}>
-                    <View style={styles.headerWrap}>
-                        <Text style={styles.headerText}>Question {this.state.current + 1} of {this.state.numberQuestions}</Text>
-                        <Text style={styles.headerText}>Correct: {this.state.correctAnswers} -
-                            Incorrect: {this.state.falseAnswers}</Text>
-                        {this.state.answerResultString}
-                    </View>
-                    <Text>Questions?</Text>
-                    <View style={styles.footerWrap}>
-                        {this.state.nextQuestionLink}
-                    </View>
-                </View>
-            })
         });
 
     }
@@ -354,6 +332,10 @@ class Quiz extends Component {
                 {this.state.answerResultString}
             </View>
             {questions}
+            <ActivityIndicator
+                animating={this.state.isLoading}
+                color="#333"
+                size="large"></ActivityIndicator>
             <View style={styles.footerWrap}>
                 {this.state.nextQuestionLink}
             </View>
@@ -371,8 +353,8 @@ class Quiz extends Component {
         //console.log(Platform);
 
         return (
-            <View>
-                {this.state.quizContentsNew}
+            <View style={styles.quizWrap}>
+                {this.state.quizContents}
             </View>
         )
     }
