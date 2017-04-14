@@ -6,7 +6,7 @@ import {
     StyleSheet,
 } from 'react-native';
 
-const { width } = Dimensions.get('window')
+const {width} = Dimensions.get('window')
 const button_width = ( width * 0.9 )
 
 const defaultStyles = StyleSheet.create({
@@ -68,6 +68,15 @@ const defaultStyles = StyleSheet.create({
         height: 100,
         justifyContent: 'flex-end',
     },
+    demoWrap: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    demoText: {
+        flex: 1,
+        fontSize: 30,
+        color: 'red',
+    }
 });
 
 module.exports = defaultStyles;

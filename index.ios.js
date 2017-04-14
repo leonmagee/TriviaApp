@@ -3,7 +3,8 @@
  */
 import React, {Component} from 'react';
 //import Main from './App/Components/Main';
-import Main from './App/Components/Quiz';
+//import Main from './App/Components/Quiz';
+import Main from './App/Components/Quiz-Redux';
 //import Main from './App/Components/QuizResult';
 //import Main from './App/Components/StaggerTest';
 import {
