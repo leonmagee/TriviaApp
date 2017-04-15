@@ -4,9 +4,12 @@
 import React, {Component} from 'react';
 //import Main from './App/Components/Main';
 //import Main from './App/Components/Quiz';
-import Main from './App/Components/Quiz-Redux';
 //import Main from './App/Components/QuizResult';
 //import Main from './App/Components/StaggerTest';
+import Main from './App/Components/Quiz-Redux';
+import {Provider} from 'react-redux';
+import store from './App/Store/store';
+
 import {
     AppRegistry,
     StyleSheet,
@@ -18,14 +21,16 @@ import {
 export default class TriviaApp extends Component {
     render() {
         return (
-            <NavigatorIOS
-                style={styles.container}
-                initialRoute={{
-                    component: Main,
-                    title: 'Home',
-                }}
-                navigationBarHidden={false}
-            />
+            <Provider store={store}>
+                <NavigatorIOS
+                    style={styles.container}
+                    initialRoute={{
+                        component: Main,
+                        title: 'Home',
+                    }}
+                    navigationBarHidden={false}
+                />
+            </Provider>
         )
     }
 }

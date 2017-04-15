@@ -71,11 +71,12 @@ const defaultStyles = StyleSheet.create({
     demoWrap: {
         alignItems: 'center',
         justifyContent: 'center',
+        flex: 1,
+        backgroundColor: 'rgba(32,178,170,0.20)',
     },
     demoText: {
-        flex: 1,
         fontSize: 30,
-        color: 'red',
+        color: 'black',
     }
 });
 
