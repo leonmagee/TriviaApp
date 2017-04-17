@@ -1,9 +1,11 @@
-export const ADD_POST = 'ADD_POST';
+export const ADD_QUESTION = 'ADD_QUESTION';
+export const NEXT_QUESTION = 'NEXT_QUESTION';
 const FETCH_QUESTIONS = 'FETCH_QUESTIONS';
 const FETCH_QUESTIONS_COMPLETE = 'FETCH_QUESTIONS_COMPLETE';
+
 import {combineReducers} from 'redux';
 
-const data = (state = {}) => {
+const user = (state = {}, action) => {
     return state;
 }
 
@@ -18,23 +20,29 @@ const questions = (state = [
 
     switch (action.type) {
         case FETCH_QUESTIONS:
-            console.log('one happened?');
+            console.log('FETCH_QUESTIONS triggered');
             return state;
         case FETCH_QUESTIONS_COMPLETE:
-            console.log('two happened?');
+            console.log('FETCH_QUESTIONS_COMPLETE triggered');
             return action.payload;
-        case ADD_POST:
-            console.log('add post triggered');
+        case ADD_QUESTION:
+            console.log('ADD_QUESTION triggered');
+            return [
+                action.payload,
+                ...state
+            ];
+        case NEXT_QUESTION:
+            console.log('NEXT_QUESTION action triggered...');
             return [
                 action.payload,
                 ...state
             ];
         default:
-            console.log('three happened?');
+            console.log('default state triggered');
             return state;
     }
 };
 
 //const reducer = combineReducers({questions, data: () => {}})
-const reducer = combineReducers({questions, data})
-module.exports = reducer;
+export const reducer = combineReducers({questions, user})
+//module.exports = reducer;

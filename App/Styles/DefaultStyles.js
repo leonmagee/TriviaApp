@@ -77,7 +77,17 @@ const defaultStyles = StyleSheet.create({
     demoText: {
         fontSize: 30,
         color: 'black',
+    },
+    newQuestionWrap: {
+        padding: 3,
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: '#444',
+        width: 200,
+        marginVertical: 5,
+        alignItems: 'center',
     }
+
 });
 
 module.exports = defaultStyles;

@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import styles from '../Styles/DefaultStyles'
 import { connect } from 'react-redux'
-import ADD_POST from '../Store/reducers'
+//import ADD_POST from '../Store/reducers'
+//const ADD_POST = 'ADD_POST';
+import { ADD_QUESTION } from '../Store/reducers'
 
 import {
     Text,
@@ -40,9 +42,19 @@ class Question extends Component {
     }
 }
 
+/**
+ * I need to chagne this to 'new question', and simply have it change the current question state,
+ * so really I'm just outputting an array of questions like I was before, but in this case the key will change
+ * using redux which will then update the view
+ * @param dispatch
+ */
 const mapActionsToProps = (dispatch) => ({
     addQuestionPost(post = {name: 'Question New'}) {
-        dispatch({type: ADD_POST, payload: post})
+        // console.log('post is:');
+        // console.log(post.nativeEvent);
+        // console.log(post);
+        //dispatch({type: ADD_POST, payload: post})
+        dispatch({type: ADD_QUESTION, payload: {name: 'Question New'}})
     }
 })
 

@@ -4,7 +4,7 @@ import styles from '../Styles/DefaultStyles'
 //import Questions from './Questions'
 import { QuestionsNew } from './QuestionsNew'
 import {SampleQuestions} from './SampleQuestions'
-//import { QuestionNew } from './QuestionsNew'
+import { QuestionNew } from './QuestionsNew'
 
 import {
     Text,
@@ -20,7 +20,6 @@ class Quiz extends Component {
         // console.log('constructor');
         console.log(SampleQuestions);
         // console.log(NewQuestion);
-        console.log(QuestionsNew);
 
         super()
         this.state = {
@@ -108,9 +107,9 @@ class Quiz extends Component {
 
     nextQuestion() {
         console.log( 'next question activated' );
-        // this.setState({
-        //     currentQuestion: 1,
-        // })
+        this.setState({
+            currentQuestion: 1,
+        })
     }
 
     render() {
@@ -118,11 +117,24 @@ class Quiz extends Component {
         return (
             <View style={styles.demoWrap}>
                 <Text style={styles.demoText}>{this.state.demoText}</Text>
-                <QuestionsNew
-                    SampleQuestions={SampleQuestions}
-                    currentQuestion={this.state.currentQuestion}
-                    nextQuestion={this.nextQuestion}
-                ></QuestionsNew>
+                <QuestionsNew />
+
+
+
+                <View style={styles.newQuestionWrap}>
+                    <Text>{SampleQuestions[this.state.currentQuestion].question}</Text>
+                </View>
+                {SampleQuestions[this.state.currentQuestion].answers.map((answer, i) => (
+                    <View style={styles.newQuestionWrap} key={i}>
+                        <Text>{answer.answer}</Text>
+                    </View>
+                ))}
+                <TouchableHighlight
+                    underlayColor="#FFF"
+                    onPress={() => this.nextQuestion()}>
+                    <Text>Next Question</Text>
+                </TouchableHighlight>
+                {/*<Questions></Questions>*/}
             </View>
         )
     }
