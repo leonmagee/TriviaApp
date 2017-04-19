@@ -1,48 +1,60 @@
-export const ADD_QUESTION = 'ADD_QUESTION';
 export const NEXT_QUESTION = 'NEXT_QUESTION';
-const FETCH_QUESTIONS = 'FETCH_QUESTIONS';
-const FETCH_QUESTIONS_COMPLETE = 'FETCH_QUESTIONS_COMPLETE';
 
 import {combineReducers} from 'redux';
 
-const user = (state = {}, action) => {
+/**
+ * Return App Title
+ * @param state
+ * @param action
+ * @returns {string}
+ */
+const numberQuestionsReducer = (state = 5, action) => {
     return state;
 }
 
+const correctAnswersReducer = (state = 3, action) => {
+    return state;
+}
+
+const falseAnswersReducer = (state = 2, action) => {
+    return state;
+}
+
+const answerResultStringReducer = (state='results string?', action) => {
+    return state;
+}
+
+
+
+
+
 /**
- * 'questions' must match the prop name
+ * Return current question index
+ * @param state
+ * @param action
+ * @returns {*}
  */
-const questions = (state = [
-                       {name: 'Question 1'},
-                       {name: 'Question 2'},
-                       {name: 'Question 3'}
-                   ], action) => {
+const currentQuestionReducer = (state = 0, action) => {
 
     switch (action.type) {
-        case FETCH_QUESTIONS:
-            console.log('FETCH_QUESTIONS triggered');
-            return state;
-        case FETCH_QUESTIONS_COMPLETE:
-            console.log('FETCH_QUESTIONS_COMPLETE triggered');
-            return action.payload;
-        case ADD_QUESTION:
-            console.log('ADD_QUESTION triggered');
-            return [
-                action.payload,
-                ...state
-            ];
         case NEXT_QUESTION:
-            console.log('NEXT_QUESTION action triggered...');
-            return [
-                action.payload,
-                ...state
-            ];
+            console.log('next question');
+            return action.payload;
+            break;
         default:
-            console.log('default state triggered');
+            console.log('question reducer default state', state);
             return state;
     }
 };
 
-//const reducer = combineReducers({questions, data: () => {}})
-export const reducer = combineReducers({questions, user})
-//module.exports = reducer;
+/**
+ * Combine State
+ * @type {Reducer<S>}
+ */
+export const reducer = combineReducers({
+    currentQuestion: currentQuestionReducer,
+    numberQuestions: numberQuestionsReducer,
+    correctAnswers: correctAnswersReducer,
+    falseAnswers: falseAnswersReducer,
+    answerResultString: answerResultStringReducer,
+});

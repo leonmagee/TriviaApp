@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from '../Styles/DefaultStyles'
-import { connect } from 'react-redux'
+import variables from '../Styles/Variables'
+//import { connect } from 'react-redux'
 import { NEXT_QUESTION } from '../Store/reducers'
 
 import {
@@ -13,30 +14,28 @@ import {
  * Array of button styles
  * Clone using JSON.stringify to create copy without reference
  */
-const mapStateToProps = (state) => ({
-    currentQuestion: state.currentQuestion
-})
 
 //questions={this.state.questions}
 
 
 export const QuestionsNew = (props) => (
-<View>
-    <View style={styles.newQuestionWrap}>
-        <Text>{props.SampleQuestions[props.currentQuestion].question}</Text>
-    </View>
-{props.SampleQuestions[props.currentQuestion].answers.map((answer, i) => (
-    <View style={styles.newQuestionWrap} key={i}>
-        <Text>{answer.answer}</Text>
-    </View>
-))}
-<TouchableHighlight
-    underlayColor="#FFF"
-    onPress={() => props.nextQuestion()}>
-    <Text>Next Question</Text>
-</TouchableHighlight>
-</View>
-);
+        <View>
+            <View style={styles.questionWrap}>
+                <Text style={styles.questionText}>{props.arrayData.question}</Text>
+            </View>
+            {props.arrayData.answers.map((answer, i) => (
+                <View style={styles.questionWrap} key={i}>
+                    <Text style={styles.questionText}>{answer.answer}</Text>
+                </View>
+            ))}
+            <TouchableHighlight
+                underlayColor={variables.brandThirdLite}
+                onPress={() => props.nextQuestion(1)}
+                style={styles.nextQuestionWrap}>
+                <Text style={styles.nextQuestion}>Next Question</Text>
+            </TouchableHighlight>
+        </View>
+    );
 
 
 
@@ -67,18 +66,25 @@ export const QuestionsNew = (props) => (
  * using redux which will then update the view
  * @param dispatch
  */
-const mapActionsToProps = (dispatch) => ({
-    addQuestionPost(post = {currentQuestion: 1}) {
-        /**
-         * How to access the actual properties from the post???
-         */
-        // console.log('post is:');
-        // console.log(post.nativeEvent);
-        // console.log(post);
-        //dispatch({type: ADD_POST, payload: post})
-        dispatch({type: NEXT_QUESTION, payload: {currentQuestion: 1}})
-    }
-})
 
-//module.exports = connect(mapStateToProps, null)(Question);
-module.exports = connect(mapStateToProps, mapActionsToProps)(QuestionsNew);
+// const mapStateToProps = (state) => ({
+//     currentQuestion: state.currentQuestion
+// })
+//
+//
+// const mapActionsToProps = (dispatch) => ({
+//     goToNextQuestion(post = {currentQuestion: 1}) {
+//         /**
+//          * How to access the actual properties from the post???
+//          */
+//         // console.log('post is:');
+//         // console.log(post.nativeEvent);
+//         // console.log(post);
+//         //dispatch({type: ADD_POST, payload: post})
+//         dispatch({type: 'NEXT_QUESTION', payload: {currentQuestion: 1}})
+//     }
+// })
+//
+// //module.exports = connect(mapStateToProps, null)(Question);
+// //module.exports = connect(mapStateToProps, mapActionsToProps)(QuestionsNew);
+// connect(mapStateToProps, mapActionsToProps)(QuestionsNew);

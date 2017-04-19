@@ -1,3 +1,8 @@
+/**
+ * @todo use more descriptive terminology here
+ * @todo it should be obvious what each style applies to
+ */
+
 import React from 'react'
 import variables from './Variables'
 import {Dimensions} from 'react-native'
@@ -8,20 +13,34 @@ import {
 
 const {width} = Dimensions.get('window')
 const button_width = ( width * 0.9 )
+const headerFooterHeight = 125;
 
 const defaultStyles = StyleSheet.create({
-    outerWrap: {
+    outerWrap: { // wraps everything
         flex: 1,
         backgroundColor: 'rgba(32,178,170,0.10)',
     },
-    quizWrap: {
+
+    headerWrap: { // header section
+        height: headerFooterHeight,
+        paddingHorizontal: 5,
+        paddingVertical: 15,
+        backgroundColor: 'red',
+        justifyContent: 'flex-end',
+    },
+    headerText: { // text in header
+        textAlign: 'center',
+        padding: 3,
+    },
+
+    quizWrap: { // wraps middle questions
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingTop: 75,
+        justifyContent: 'center',
         paddingHorizontal: 15,
+        //backgroundColor: 'green',
     },
-    questionWrap: {
+    questionWrap: { // individual question or answer
         backgroundColor: '#FCFCFC',
         marginTop: 15,
         marginBottom: 15,
@@ -32,10 +51,13 @@ const defaultStyles = StyleSheet.create({
         borderWidth: 2,
         width: button_width
     },
-    activityIndicator: {
-        flex: 1,
-        justifyContent: 'center',
+
+    footerWrap: {
+        height: headerFooterHeight,
+        justifyContent: 'flex-end',
+        backgroundColor: 'blue',
     },
+
     questionText: {
         fontWeight: 'bold',
         fontSize: 18,
@@ -56,37 +78,14 @@ const defaultStyles = StyleSheet.create({
         fontSize: 16,
         textShadowOffset: {width: 1, height: 1},
     },
-    headerWrap: {
-        height: 100,
-        padding: 5,
-    },
-    headerText: {
-        textAlign: 'center',
-        padding: 3,
-    },
-    footerWrap: {
-        height: 100,
-        justifyContent: 'flex-end',
-    },
-    demoWrap: {
-        alignItems: 'center',
-        justifyContent: 'center',
+
+
+
+    activityIndicator: {
         flex: 1,
-        backgroundColor: 'rgba(32,178,170,0.20)',
+        justifyContent: 'center',
     },
-    demoText: {
-        fontSize: 30,
-        color: 'black',
-    },
-    newQuestionWrap: {
-        padding: 3,
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: '#444',
-        width: 200,
-        marginVertical: 5,
-        alignItems: 'center',
-    }
+
 
 });
 

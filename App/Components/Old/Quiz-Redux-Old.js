@@ -27,7 +27,7 @@ class Quiz extends Component {
             //questions: false,
             currentQuestion: 0,
             numberQuestions: 5,
-            demoText: 'Hello World!',
+            demoText: 'Hello World! xxxx',
             questions: [
                 {
                     name: 'Question 1',
