@@ -5,7 +5,8 @@
  */
 import React, {Component} from 'react';
 //import Main from './App/Components/Main'; // homepage component
-import {Quiz} from './App/Components/Quiz';
+//import {Quiz} from './App/Components/Quiz';
+import {MainWrap} from './App/Components/MainWrap';
 import {Provider} from 'react-redux';
 import store from './App/Store/store';
 
@@ -19,7 +20,7 @@ export default class TriviaApp extends Component {
     render() {
         return (
             <Provider store={store}>
-                <Quiz />
+                <MainWrap />
             </Provider>
         )
     }

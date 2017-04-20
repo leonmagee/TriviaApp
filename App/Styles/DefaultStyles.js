@@ -15,15 +15,18 @@ const {width} = Dimensions.get('window')
 const button_width = ( width * 0.9 )
 
 const defaultStyles = StyleSheet.create({
-    outerWrap: { // wraps everything
+    outerWrapMain: { // wraps everything
+        flex: 1,
+    },
+    outerWrap: {
         flex: 1,
         backgroundColor: 'rgba(32,178,170,0.10)',
     },
 
     headerWrap: { // header section
-        height: 150,
+        height: 125,
         paddingHorizontal: 5,
-        paddingTop: 30,
+        paddingTop: 45,
         //backgroundColor: 'red',
         justifyContent: 'center',
     },
@@ -79,11 +82,25 @@ const defaultStyles = StyleSheet.create({
         borderWidth: 1,
         width: button_width
     },
+    answerCorrect: {
+        backgroundColor: variables.brandSecond,
+        borderColor: variables.brandSecond,
+    },
+    answerIncorrect: {
+        backgroundColor: variables.brandPrimary,
+        borderColor: variables.brandPrimary,
+    },
     answerText: {
         fontWeight: 'bold',
         fontSize: 17,
         color: variables.brandThird,
         textAlign: 'center',
+    },
+    answerCorrectText: {
+        color: 'white',
+    },
+    answerIncorrectText: {
+        color: 'white',
     },
 
     footerWrap: {
@@ -123,6 +140,16 @@ const defaultStyles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
         color: 'white',
+    },
+
+    quizResultsWrap: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    quizResultsHeaderText: {
+       fontSize: 25,
+        color: variables.brandPrimary,
     },
 
     activityIndicator: {

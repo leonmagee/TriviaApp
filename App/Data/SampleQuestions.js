@@ -12,11 +12,11 @@ export const SampleQuestions = [
             },
             {
                 answer: 'Bran Stark',
-                correct: false,
+                correct: true,
             },
             {
                 answer: 'Rob Stark',
-                correct: true,
+                correct: false,
             },
         ]
     },

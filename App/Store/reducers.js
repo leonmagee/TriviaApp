@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text } from 'react-native';
+import {Text} from 'react-native';
 import {combineReducers} from 'redux';
 import styles from '../Styles/DefaultStyles';
 import variables from '../Styles/Variables'
 import {
     NEXT_QUESTION,
     QUIZ_RESULTS,
+    ANSWER_SUBMITTED,
     CORRECT_ANSWER,
     INCORRECT_ANSWER
 } from './actions';
@@ -19,14 +20,53 @@ import {
  */
 const numberQuestionsReducer = (state = 5, action) => {
     return state;
+    /**
+     * @todo this should be a default state in the store, not a reducer?
+     */
 }
 
-const correctAnswersReducer = (state = 0, action) => {
-    return state;
+const correctAnswerReducer = (state = 0, action) => {
+    switch (action.type) {
+        case CORRECT_ANSWER:
+            return state + 1;
+            break;
+        default:
+            return state;
+    }
 }
 
-const falseAnswersReducer = (state = 0, action) => {
-    return state;
+const falseAnswerReducer = (state = 0, action) => {
+    switch (action.type) {
+        case INCORRECT_ANSWER:
+            return state + 1;
+            break;
+        default:
+            return state;
+    }
+}
+
+const answerSubmittedReducer = (state = false, action) => {
+    switch (action.type) {
+        case ANSWER_SUBMITTED:
+            return true;
+            break;
+        case NEXT_QUESTION:
+            return false;
+            break;
+        default:
+            return state;
+    }
+}
+
+const quizResultsReducer = (state = false, action) => {
+
+    switch (action.type) {
+        case QUIZ_RESULTS: {
+            return true;
+        }
+        default:
+            return state;
+    }
 }
 
 const answerResultStringReducer = (state = '', action) => {
@@ -39,7 +79,8 @@ const answerResultStringReducer = (state = '', action) => {
             return <Text style={[s, {color: variables.brandPrimary}]}>INCORRECT</Text>
             break;
         default:
-            return <Text style={[s, {color: variables.brandSecond}]}>NULL</Text>
+            return <Text></Text>
+        //return <Text style={[s, {color: variables.brandSecond}]}>NULL</Text>
     }
 }
 
@@ -68,7 +109,9 @@ const currentQuestionReducer = (state = 0, action) => {
 export const reducer = combineReducers({
     currentQuestion: currentQuestionReducer,
     numberQuestions: numberQuestionsReducer,
-    correctAnswers: correctAnswersReducer,
-    falseAnswers: falseAnswersReducer,
+    correctAnswer: correctAnswerReducer,
+    falseAnswer: falseAnswerReducer,
     answerResultString: answerResultStringReducer,
+    answerSubmitted: answerSubmittedReducer,
+    quizResults: quizResultsReducer,
 });
