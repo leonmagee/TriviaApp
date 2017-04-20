@@ -1,6 +1,15 @@
-export const NEXT_QUESTION = 'NEXT_QUESTION';
-
+import React from 'react';
+import { Text } from 'react-native';
 import {combineReducers} from 'redux';
+import styles from '../Styles/DefaultStyles';
+import variables from '../Styles/Variables'
+import {
+    NEXT_QUESTION,
+    QUIZ_RESULTS,
+    CORRECT_ANSWER,
+    INCORRECT_ANSWER
+} from './actions';
+
 
 /**
  * Return App Title
@@ -12,20 +21,27 @@ const numberQuestionsReducer = (state = 5, action) => {
     return state;
 }
 
-const correctAnswersReducer = (state = 3, action) => {
+const correctAnswersReducer = (state = 0, action) => {
     return state;
 }
 
-const falseAnswersReducer = (state = 2, action) => {
+const falseAnswersReducer = (state = 0, action) => {
     return state;
 }
 
-const answerResultStringReducer = (state='results string?', action) => {
-    return state;
+const answerResultStringReducer = (state = '', action) => {
+    const s = styles.correctIncorrectText;
+    switch (action.type) {
+        case CORRECT_ANSWER:
+            return <Text style={[s, {color: variables.brandSecond}]}>CORRECT</Text>
+            break;
+        case INCORRECT_ANSWER:
+            return <Text style={[s, {color: variables.brandPrimary}]}>INCORRECT</Text>
+            break;
+        default:
+            return <Text style={[s, {color: variables.brandSecond}]}>NULL</Text>
+    }
 }
-
-
-
 
 
 /**
@@ -38,11 +54,9 @@ const currentQuestionReducer = (state = 0, action) => {
 
     switch (action.type) {
         case NEXT_QUESTION:
-            console.log('next question');
-            return action.payload;
+            return state + 1;
             break;
         default:
-            console.log('question reducer default state', state);
             return state;
     }
 };

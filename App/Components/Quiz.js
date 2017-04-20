@@ -1,13 +1,15 @@
 import React, {Component} from 'react'
 var api = require('../Utils/api')
 import styles from '../Styles/DefaultStyles'
-import {QuestionsNew} from './QuestionsNew'
-import {SampleQuestions} from './SampleQuestions'
+import {Questions} from './Questions'
+import {SampleQuestions} from '../Data/SampleQuestions'
 import {connect} from 'react-redux'
+import variables from '../Styles/Variables'
 
 import {
     Text,
     View,
+    TouchableHighlight,
 } from 'react-native'
 
 
@@ -35,18 +37,25 @@ class _Quiz extends Component {
                     <Text style={styles.headerText}>Question {this.props.currentQuestion + 1} of {this.props.numberQuestions}</Text>
                     <Text style={styles.headerText}>Correct: {this.props.correctAnswers} -
                         Incorrect: {this.props.falseAnswers}</Text>
-                    <Text>{this.props.answerResultString}</Text>
+                    <View style={styles.correctIncorrectWrap}>
+                        {this.props.answerResultString}
+                    </View>
                 </View>
 
                 <View style={styles.quizWrap}>
-                    <QuestionsNew
+                    <Questions
                         arrayData={arrayData}
                         nextQuestion={this.nextQuestion.bind(this)}
-                    ></QuestionsNew>
+                    ></Questions>
                 </View>
 
                 <View style={styles.footerWrap}>
-                    <Text>Footer Content</Text>
+                    <TouchableHighlight
+                        underlayColor={variables.brandThirdLite}
+                        onPress={() => this.nextQuestion(1)}
+                        style={styles.nextButton}>
+                        <Text style={styles.nextButtonText}>NEXT QUESTION</Text>
+                    </TouchableHighlight>
                 </View>
 
             </View>//outer wrap
